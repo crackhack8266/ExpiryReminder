@@ -24,8 +24,7 @@ router.post("/signin", async (req, res) => {
     return res.status(422).send({ error: "Must provide email and password" });
   }
 
-  //here we will save the searched user details (if we found one from the db) in the const user variable
-  const user = await User.findOne({ email: email }); //findOne method is going to take an object as argument. here we wnt to find user using email so we will pass email property in the object
+  const user = await User.findOne({ email: email });
   if (!user) {
     return res.status(422).send({ error: "Invalid password or email" });
   }
