@@ -2,17 +2,22 @@ const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const User = mongoose.model("User");
 const config = require("config");
+const { UnauthorizedException } = require("../utilities/exceptions");
 
 const authenticateLogin = (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization) {
-    return res.status(401).send({ error: "You must be logged in" });
+    throw new UnauthorizedException(
+      "Unauthorized user: Please Provide Token For Verification"
+    );
   }
   const token = authorization;
   try {
     jwt.verify(token, config.get("tokenSecret"), async (err, payload) => {
       if (err) {
-        return res.status(401).send({ error: "You must be logged in" });
+        throw new UnauthorizedException(
+          "Unauthorized User: Token Verification Failed"
+        );
       }
       const { userId } = payload;
       const user = await User.findById(userId);
@@ -20,7 +25,7 @@ const authenticateLogin = (req, res, next) => {
       next();
     });
   } catch (e) {
-    return res.status(401).send({ error: "You must be logged in" });
+    console.log(e);
   }
 };
 
