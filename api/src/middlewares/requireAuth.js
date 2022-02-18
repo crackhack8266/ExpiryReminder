@@ -1,21 +1,25 @@
 const jwt = require("jsonwebtoken");
-const mongoose = require("mongoose");
-const User = mongoose.model("User");
+const User = require("../models/User");
 const config = require("config");
-const { UnauthorizedException } = require("../utilities/exceptions");
+const CONSTANTS = require("../constants/");
+const {
+  UnauthorizedException,
+  BadRequestException,
+} = require("../utilities/exceptions");
 
 const authenticateLogin = async (req, res, next) => {
-  const { authorization } = req.headers;
-  if (!authorization) {
-    throw new UnauthorizedException(
-      "Unauthorized user: Please Provide Token For Verification"
-    );
-  }
-  const token = authorization;
   try {
+    const { authorization } = req.headers;
+
+    if (!authorization) {
+      throw new BadRequestException(CONSTANTS.PROVIDE_TOKEN);
+    }
+
+    const token = authorization;
+
     await jwt.verify(token, config.get("tokenSecret"), async (err, payload) => {
       if (err) {
-        throw new UnauthorizedException("Please provide correct token");
+        throw new UnauthorizedException(CONSTANTS.PROVIDE_CORRECT_TOKEN);
       }
       const { userId } = payload;
       console.log(userId);
@@ -25,8 +29,6 @@ const authenticateLogin = async (req, res, next) => {
     });
   } catch (e) {
     res.status(e.statusCode).send(e);
-    //cons result = await json(object);
-    // json(object).then((res) => { result = res}).catch((e)=>console.log(e))
   }
 };
 

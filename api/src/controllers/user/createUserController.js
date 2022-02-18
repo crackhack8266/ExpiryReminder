@@ -1,19 +1,14 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const User = mongoose.model("User");
-const jwt = require("jsonwebtoken");
-const config = require("config");
+const userService = require("../../services/user");
 
-const createUser = async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    const user = new User({ email, password });
-    await user.save();
-    const token = jwt.sign({ userId: user._id }, config.get("tokenSecret"));
-    res.send({ token });
-  } catch (e) {
-    return res.status(422).send(e.message);
-  }
+const createUser = (req, res) => {
+  userService
+    .createUserService(req, res)
+    .then((token) => {
+      res.status(422).json(token).send();
+    })
+    .catch((e) => {
+      res.send(e);
+    });
 };
 
 module.exports = createUser;

@@ -1,5 +1,4 @@
 function generateException(errorInstance, statusCode, title, exception) {
-  console.log(exception);
   errorInstance.statusCode = exception.statusCode || statusCode;
   errorInstance.title = exception.title || title;
   errorInstance.description =
