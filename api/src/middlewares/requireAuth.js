@@ -4,7 +4,7 @@ const User = mongoose.model("User");
 const config = require("config");
 const { UnauthorizedException } = require("../utilities/exceptions");
 
-const authenticateLogin = (req, res, next) => {
+const authenticateLogin = async (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization) {
     throw new UnauthorizedException(
@@ -13,19 +13,20 @@ const authenticateLogin = (req, res, next) => {
   }
   const token = authorization;
   try {
-    jwt.verify(token, config.get("tokenSecret"), async (err, payload) => {
+    await jwt.verify(token, config.get("tokenSecret"), async (err, payload) => {
       if (err) {
-        throw new UnauthorizedException(
-          "Unauthorized User: Token Verification Failed"
-        );
+        throw new UnauthorizedException("Please provide correct token");
       }
       const { userId } = payload;
+      console.log(userId);
       const user = await User.findById(userId);
       req.user = user;
       next();
     });
   } catch (e) {
-    console.log(e);
+    res.status(e.statusCode).send(e);
+    //cons result = await json(object);
+    // json(object).then((res) => { result = res}).catch((e)=>console.log(e))
   }
 };
 
