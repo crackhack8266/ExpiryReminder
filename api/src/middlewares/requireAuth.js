@@ -10,17 +10,10 @@ const {
 const authenticateLogin = async (req, res, next) => {
   try {
     const { authorization } = req.headers;
-
-    if (!authorization) {
-      throw new BadRequestException(CONSTANTS.PROVIDE_TOKEN);
-    }
-
+    if (!authorization) throw new BadRequestException(CONSTANTS.PROVIDE_TOKEN);
     const token = authorization;
-
     await jwt.verify(token, config.get("tokenSecret"), async (err, payload) => {
-      if (err) {
-        throw new UnauthorizedException(CONSTANTS.PROVIDE_CORRECT_TOKEN);
-      }
+      if (err) throw new UnauthorizedException(CONSTANTS.PROVIDE_CORRECT_TOKEN);
       const { userId } = payload;
       console.log(userId);
       const user = await User.findById(userId);
