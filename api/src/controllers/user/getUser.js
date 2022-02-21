@@ -7,7 +7,7 @@ const getUser = (req, res) => {
       res.status(200).json(user).send();
     })
     .catch((e) => {
-      res.status(e.statusCode).send(e);
+      res.status(e.statusCode).send(e.data);
     });
 };
 

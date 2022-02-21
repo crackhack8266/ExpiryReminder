@@ -7,7 +7,8 @@ const updateUser = (req, res) => {
       res.status(200).json(updatedUserId).send();
     })
     .catch((e) => {
-      res.status(e.statusCode).send(e);
+      //let result = { title: e.title, description: e.description };
+      res.status(e.statusCode).send(e.data);
     });
 };
 

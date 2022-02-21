@@ -7,7 +7,7 @@ const deleteUser = (req, res) => {
       res.status(200).json(deletedUserId).send();
     })
     .catch((e) => {
-      res.status(e.statusCode).send(e);
+      res.status(e.statusCode).send(e.data);
     });
 };
 

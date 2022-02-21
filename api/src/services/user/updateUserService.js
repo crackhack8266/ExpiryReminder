@@ -1,6 +1,6 @@
 const User = require("../../models/User");
 
-const { BadRequestException } = require("../../utilities/exceptions");
+const { NotFoundException } = require("../../utilities/exceptions");
 
 const updateUserService = async (id, body) => {
   try {
@@ -9,10 +9,12 @@ const updateUserService = async (id, body) => {
     result.save();
     return {
       id,
-      result,
+      data: body,
     };
   } catch (err) {
-    throw new BadRequestException("Please Provide Correct Id");
+    throw new NotFoundException(
+      "Please provide correct id, as there is no user assigned to that id."
+    );
   }
 };
 module.exports = updateUserService;

@@ -9,10 +9,10 @@ const updateUser = require("./updateUser");
 const router = express.Router();
 
 router.post("/signin", signinUser);
-router.post("/createuser", createUser);
+router.post("/", createUser);
 router.delete("/:id", deleteUser);
-router.patch("/:id", updateUser);
-router.get("/getall", getUsers);
+router.put("/:id", updateUser);
+router.get("/users", getUsers);
 router.get("/:id", getUser);
 
 module.exports = router;
