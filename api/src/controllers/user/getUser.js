@@ -2,12 +2,12 @@ const userService = require("../../services/user");
 
 const getUser = (req, res) => {
   userService
-    .getUserService(req, res)
-    .then((token) => {
-      res.status(422).json(token).send();
+    .getUserService(req.params.id)
+    .then((user) => {
+      res.status(200).json(user).send();
     })
     .catch((e) => {
-      res.send(e);
+      res.status(e.statusCode).send(e);
     });
 };
 

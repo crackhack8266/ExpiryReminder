@@ -2,12 +2,12 @@ const userService = require("../../services/user");
 
 const updateUser = (req, res) => {
   userService
-    .updateUserService(req, res)
-    .then((token) => {
-      res.status(422).json(token).send();
+    .updateUserService(req.params.id, req.body)
+    .then((updatedUserId) => {
+      res.status(200).json(updatedUserId).send();
     })
     .catch((e) => {
-      res.send(e);
+      res.status(e.statusCode).send(e);
     });
 };
 

@@ -2,14 +2,17 @@ const User = require("../../models/User");
 
 const { BadRequestException } = require("../../utilities/exceptions");
 
-const updateUserService = async (req, res) => {
+const updateUserService = async (id, body) => {
   try {
-    const result = await User.findById(req.params.id);
-    Object.assign(result, req.body);
+    const result = await User.findById(id);
+    Object.assign(result, body);
     result.save();
-    res.send("updated");
+    return {
+      id,
+      result,
+    };
   } catch (err) {
-    res.status(422).send(err.message);
+    throw new BadRequestException("Please Provide Correct Id");
   }
 };
 module.exports = updateUserService;

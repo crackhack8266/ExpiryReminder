@@ -10,6 +10,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  salary: {
+    type: Number,
+    required: true,
+  },
 });
 userSchema.pre("save", function (next) {
   const user = this;

@@ -3,15 +3,16 @@ const jwt = require("jsonwebtoken");
 const config = require("config");
 const { BadRequestException } = require("../../utilities/exceptions");
 
-const createUserService = async (req, res) => {
+const createUserService = async (body) => {
   try {
-    const { email, password } = req.body;
-    const user = new User({ email, password });
+    const { email, password, salary } = body;
+
+    const user = new User({ email, password, salary });
     await user.save();
     const token = jwt.sign({ userId: user._id }, config.get("tokenSecret"));
-    res.send({ token });
+    return { token, user };
   } catch (e) {
-    res.status(422).send(e.message);
+    throw new BadRequestException("Please Provide Email, Password & Salary");
   }
 };
 module.exports = createUserService;

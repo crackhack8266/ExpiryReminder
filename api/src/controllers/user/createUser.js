@@ -1,13 +1,14 @@
 const userService = require("../../services/user");
+const { BadRequestException } = require("../../utilities/exceptions");
 
 const createUser = (req, res) => {
   userService
-    .createUserService(req, res)
+    .createUserService(req.body)
     .then((token) => {
-      res.status(422).json(token).send();
+      res.status(200).json(token).send();
     })
     .catch((e) => {
-      res.send(e);
+      res.status(e.statusCode).send(e);
     });
 };
 
