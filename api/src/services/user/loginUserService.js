@@ -23,8 +23,11 @@ const loginUserService = async (body) => {
     const token = jwt.sign({ userId: user._id }, config.get("tokenSecret"));
     return { token, id: user._id, email: user.email, salary: user.salary };
   } catch (e) {
-    if (e === false) throw new NotAcceptableException("Password is incorrect");
-    throw new NotFoundException("Please provide correct email");
+    if (e === false)
+      throw new NotAcceptableException(
+        "Please provide correct email and password"
+      );
+    throw new NotFoundException("Please provide correct email and password");
   }
 };
 

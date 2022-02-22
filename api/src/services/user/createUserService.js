@@ -14,7 +14,10 @@ const createUserService = async (body) => {
     const user = new User({ email, password, salary });
     await user.save();
     const token = jwt.sign({ userId: user._id }, config.get("tokenSecret"));
-    return { token, user };
+    return {
+      token,
+      data: { id: user._id, email: user.email, salary: user.salary },
+    };
   } catch (e) {
     throw new ConflictException(
       "Account already exists.! Try with another email id"
