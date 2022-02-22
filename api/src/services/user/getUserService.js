@@ -5,7 +5,7 @@ const { NotFoundException } = require("../../utilities/exceptions");
 const getUserService = async (id) => {
   try {
     const result = await User.findById(id);
-    return { email: result.email, salary: result.salary };
+    return { data: { email: result.email, salary: result.salary } };
   } catch (err) {
     throw new NotFoundException(
       "Please provide correct id, as there is no user assigned to that id."

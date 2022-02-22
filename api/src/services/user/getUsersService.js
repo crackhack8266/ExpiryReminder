@@ -1,11 +1,9 @@
 const User = require("../../models/User");
 
-const { BadRequestException } = require("../../utilities/exceptions");
-
 const getUsersService = async (page, limit) => {
   try {
     page = page <= 0 ? 1 : page;
-    const result = await User.find()
+    const result = await User.find({}, "-_id email salary")
       .limit(limit)
       .skip((page - 1) * limit);
     const numOfItems = await User.countDocuments();
@@ -15,7 +13,7 @@ const getUsersService = async (page, limit) => {
       totalEntries: numOfItems,
       currentPage: parseInt(page),
       itemPerPage: limit,
-      result,
+      data: result,
     };
   } catch (err) {
     return err.message;

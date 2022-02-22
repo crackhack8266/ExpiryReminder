@@ -21,7 +21,10 @@ const loginUserService = async (body) => {
 
     await user.comparePassword(password);
     const token = jwt.sign({ userId: user._id }, config.get("tokenSecret"));
-    return { token, id: user._id, email: user.email, salary: user.salary };
+    return {
+      token,
+      data: { id: user._id, email: user.email, salary: user.salary },
+    };
   } catch (e) {
     if (e === false)
       throw new NotAcceptableException(
