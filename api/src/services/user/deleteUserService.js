@@ -7,7 +7,7 @@ const deleteUserService = async (id) => {
     const result = await User.findById(id);
     await result.remove();
 
-    return { id, data: { email: result.email, salary: result.salary } };
+    return { data: { email: result.email, salary: result.salary } };
   } catch (err) {
     console.log(err);
     throw new NotFoundException(

@@ -10,8 +10,10 @@ const createUserService = async (body) => {
   const { email, password, salary } = body;
   if (!email || !password || !salary)
     throw new UnprocessableEntity("Must Provide Email, Password and Salary");
+  const createdAt = +new Date();
+  const modifiedAt = +new Date();
   try {
-    const user = new User({ email, password, salary });
+    const user = new User({ email, password, salary, createdAt, modifiedAt });
     await user.save();
     const token = jwt.sign({ userId: user._id }, config.get("tokenSecret"));
     return {

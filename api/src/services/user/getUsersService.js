@@ -3,9 +3,16 @@ const User = require("../../models/User");
 const getUsersService = async (page, limit) => {
   try {
     page = page <= 0 ? 1 : page;
-    const result = await User.find({}, "-_id email salary")
+    const result = await User.find({}, { email: 1, salary: 1, _id: 1 })
       .limit(limit)
       .skip((page - 1) * limit);
+    const data = result.map((element) => {
+      return {
+        id: element._id,
+        email: element.email,
+        salary: element.salary,
+      };
+    });
     const numOfItems = await User.countDocuments();
     const totalPages = Math.ceil(numOfItems / limit);
     return {
@@ -13,7 +20,7 @@ const getUsersService = async (page, limit) => {
       totalEntries: numOfItems,
       currentPage: parseInt(page),
       itemPerPage: limit,
-      data: result,
+      data: data,
     };
   } catch (err) {
     return err.message;

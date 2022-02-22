@@ -14,6 +14,12 @@ const userSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  createdAt: {
+    type: Date,
+  },
+  modifiedAt: {
+    type: Date,
+  },
 });
 userSchema.pre("save", function (next) {
   const user = this;
@@ -40,4 +46,5 @@ userSchema.methods.comparePassword = function (userPassword) {
     });
   });
 };
+
 module.exports = mongoose.model("User", userSchema);
