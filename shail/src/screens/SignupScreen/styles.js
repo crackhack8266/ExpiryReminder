@@ -4,17 +4,15 @@ export default StyleSheet.create({
   parentView: {
     height: Dimensions.get('window').height,
     paddingHorizontal: '5%',
-    justifyContent: 'center',
   },
-  imageView: {
-    width: '80%',
-    height: '40%',
+  imageStyle: {
+    width: '50%',
+    height: '30%',
     resizeMode: 'contain',
     alignSelf: 'center',
   },
   textInputContainerView: {
-    justifyContent: 'space-evenly',
-    height: '17%',
+    marginBottom: '8%',
   },
   textInputView: {
     borderColor: 'black',
@@ -36,7 +34,6 @@ export default StyleSheet.create({
     backgroundColor: 'black',
     width: '100%',
     borderRadius: 20,
-    padding: '2%',
     height: '5%',
     justifyContent: 'center',
   },

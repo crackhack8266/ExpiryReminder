@@ -1,130 +1,121 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   Image,
   TextInput,
-  Platform,
-  Dimensions,
   StatusBar,
-  ScrollView,
+  TouchableOpacity,
+  Alert,
 } from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import Icon from 'react-native-vector-icons/Ionicons';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import SQLite from 'react-native-sqlite-storage';
 
-const LoginScreen = () => {
+import styles from './styles';
+
+const db = SQLite.openDatabase(
+  {
+    name: 'items',
+    location: 'default',
+  },
+  () => {},
+  error => {
+    console.log(error);
+  },
+);
+
+const LoginScreen = ({navigation}) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [usersList, setUsersList] = useState('');
+  useEffect(() => {
+    createTable();
+    getData();
+  }, []);
+
+  const createTable = () => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'CREATE TABLE IF NOT EXISTS ' +
+          'Users ' +
+          '(ID INTEGER PRIMARY KEY AUTOINCREMENT,Username TEXT UNIQUE, Email TEXT, Password TEXT);',
+      );
+    });
+  };
+
+  const getData = () => {
+    db.transaction(tx => {
+      tx.executeSql('SELECT Email, Password FROM Users', [], (tx, results) => {
+        var len = results.rows.length;
+
+        if (len > 0) {
+          let helperArray = [];
+          for (let i = 0; i < len; i++) {
+            console.log(results.rows.item(i));
+            helperArray.push(results.rows.item(i));
+          }
+          setUsersList(helperArray);
+        }
+      });
+    });
+  };
+
+  const verifyLogin = () => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT Email, Password FROM Users WHERE Email = ? ',
+        [email],
+        (tx, results) => {
+          var len = results.rows.length;
+          console.log(results.rows);
+          if (len > 0) {
+            let enteredPassword;
+            for (let i = 0; i < len; i++) {
+              console.log(results.rows.item(i));
+              enteredPassword = results.rows.item(i).Password;
+              console.log('enteredPassword: ', enteredPassword);
+              console.log('password: ', password);
+              if (enteredPassword == password) {
+                navigation.navigate('HomeScreen');
+              } else {
+                console.log('Password is wrong');
+              }
+            }
+            setUsersList(helperArray);
+          } else {
+            console.log('email does not exist');
+          }
+        },
+      );
+    });
+  };
+
   return (
-    <View
-      style={{
-        height: Dimensions.get('window').height,
-        paddingHorizontal: '5%',
-        justifyContent: 'center',
-        backgroundColor: '#fff',
-      }}>
-      <StatusBar backgroundColor="#fff" barStyle={'dark-content'} />
-      <Image
-        source={require('../../common/assets/images/logo.jpeg')}
-        style={{
-          width: '80%',
-          height: '40%',
-          resizeMode: 'contain',
-          alignSelf: 'center',
-        }}
-      />
+    <KeyboardAwareScrollView style={{backgroundColor: 'white'}}>
+      <View style={styles.parentView}>
+        <StatusBar backgroundColor="#fff" barStyle={'dark-content'} />
+        <Image
+          source={require('../../common/assets/images/logo.jpeg')}
+          style={styles.imageView}
+        />
 
-      <View
-        style={{
-          justifyContent: 'space-evenly',
-          height: '20%',
-        }}>
-        <View
-          style={{
-            borderColor: 'black',
-            borderWidth: 1,
-            paddingHorizontal: '3%',
-            paddingVertical: Platform.OS === 'android' ? 0 : '3%',
-            borderRadius: 20,
-            flexDirection: 'row',
-          }}>
-          <Icon
-            name="mail"
-            size={24}
-            style={{
-              marginRight: '2%',
-              alignSelf: 'center',
-            }}
-          />
-          <TextInput
-            autoCorrect={false}
-            placeholder="Email"
-            enablesReturnKeyAutomatically={true}
-            clearButtonMode={true}
-            style={{
-              fontSize: 18,
-              flex: 1,
-            }}
-          />
+        <View style={styles.loginButtonView}>
+          <TouchableOpacity>
+            <Text style={styles.loginTextStyle} onPress={verifyLogin}>
+              Login
+            </Text>
+          </TouchableOpacity>
         </View>
-
-        <View
-          style={{
-            borderColor: 'black',
-            borderWidth: 1,
-            borderRadius: 20,
-            paddingHorizontal: '3%',
-            paddingVertical: Platform.OS === 'android' ? 0 : '3%',
-            flexDirection: 'row',
-          }}>
-          <Icon
-            name="lock-closed"
-            size={24}
-            style={{marginRight: '2%', alignSelf: 'center'}}
-          />
-          <TextInput
-            autoCorrect={false}
-            placeholder="Password"
-            enablesReturnKeyAutomatically={true}
-            secureTextEntry={true}
-            clearButtonMode={true}
-            style={{
-              fontSize: 18,
-              flex: 1,
-            }}
-          />
-        </View>
-      </View>
-      <View
-        style={{
-          backgroundColor: 'black',
-          width: '100%',
-          borderRadius: 20,
-          padding: '2%',
-          height: '5%',
-          justifyContent: 'center',
-        }}>
-        <TouchableOpacity>
+        <View style={styles.footerView}>
+          <Text>Don't have an account ? </Text>
           <Text
-            style={{
-              alignSelf: 'center',
-              color: 'white',
-              fontWeight: 'bold',
-              letterSpacing: 2,
-            }}>
-            Login
+            style={styles.signUpTextStyle}
+            onPress={() => navigation.navigate('SignupScreen')}>
+            Sign Up
           </Text>
-        </TouchableOpacity>
+        </View>
       </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          marginTop: '3%',
-        }}>
-        <Text>Don't have an account ? </Text>
-        <Text style={{color: 'red', fontWeight: '600'}}>Sign Up</Text>
-      </View>
-    </View>
+    </KeyboardAwareScrollView>
   );
 };
 
