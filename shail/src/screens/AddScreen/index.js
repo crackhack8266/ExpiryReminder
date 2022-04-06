@@ -63,12 +63,8 @@ const AddScreen = ({navigation}) => {
   };
 
   const calculateDaysRemaining = () => {
-    console.log('MyDate', mydate.getTime());
-    console.log('Current Date', new Date().getTime());
     let timeDifference = mydate.getTime() - new Date().getTime();
     let differenceInDays = Math.ceil(timeDifference / (1000 * 3600 * 24));
-
-    console.log(differenceInDays);
     return differenceInDays;
   };
   const calculateMinMaxDate = () => {
@@ -88,7 +84,7 @@ const AddScreen = ({navigation}) => {
 
   const insertQuery = (itemName, expiryDate) => {
     console.log('insertQuery Executed:');
-    console.log('expirydate : ', expiryDate.toDateString());
+
     if (
       itemName.length == 0 ||
       expiryDate.toDateString() == new Date().toDateString()
@@ -96,20 +92,17 @@ const AddScreen = ({navigation}) => {
       Alert.alert('Warning!', 'Please write your data.');
     } else {
       try {
-        console.log('before transaction');
         db.transaction(tx => {
           // await tx.executeSql(
           //     "INSERT INTO Users (Name, Age) VALUES ('" + name + "'," + age + ")"
           // );
-          console.log('beforeexecuteSql : ', tx);
+
           tx.executeSql(
             'INSERT INTO Item_Details (itemName, expiryDate) VALUES (?,?)',
             [itemName, expiryDate],
           );
-          console.log('afterexecuteSql');
-          console.log('navigation :', navigation);
         });
-        console.log('after Transaction');
+
         navigation.navigate('HomeScreen');
       } catch (error) {
         Alert.alert('Error', 'Please try again later.');

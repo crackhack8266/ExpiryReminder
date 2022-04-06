@@ -11,6 +11,7 @@ import {
   Button,
   TextInput,
 } from 'react-native';
+import {MenuProvider} from 'react-native-popup-menu';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
 import HomeScreen from './src/screens/HomeScreen';
@@ -148,24 +149,26 @@ const BottomTabNavigator = () => {
 
 const App = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="BottomTabNavigator"
-        screenOptions={{headerShown: false}}
-        presentation="modal">
-        <Stack.Screen
-          name="BottomTabNavigator"
-          component={BottomTabNavigator}
-          options={{headerShown: false}}
-        />
+    <MenuProvider>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="BottomTabNavigator"
+          screenOptions={{headerShown: false}}
+          presentation="modal">
+          <Stack.Screen
+            name="BottomTabNavigator"
+            component={BottomTabNavigator}
+            options={{headerShown: false}}
+          />
 
-        <Stack.Screen
-          name="AddScreen"
-          component={AddScreen}
-          options={{animationEnabled: true}}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+          <Stack.Screen
+            name="AddScreen"
+            component={AddScreen}
+            options={{animationEnabled: true}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </MenuProvider>
   );
 };
 
