@@ -1,22 +1,44 @@
 import {StyleSheet} from 'react-native';
 
 export default StyleSheet.create({
-  innerModalView: {
-    backgroundColor: 'red',
-    height: 100,
-    width: 100,
-    borderRadius: 20,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    marginHorizontal: '5%',
-    paddingHorizontal: 10,
+  roundedStyles: {
+    backgroundColor: 'white',
+    borderRadius: 25,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    width: 50,
+    elevation: 5,
+    paddingVertical: 10,
   },
 
-  outerModalView: {
-    backgroundColor: 'white',
-    height: 100,
-    width: 100,
+  leftSwipeText: {
+    alignSelf: 'center',
+    color: 'white',
+  },
+  leftSwipe: {
+    backgroundColor: 'red',
+    height: 57,
+    width: 70,
+    borderRadius: 10,
     flexDirection: 'row',
-    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  rightSwipeText: {
+    alignSelf: 'center',
+    color: 'white',
+  },
+  rightSwipe: {
+    backgroundColor: 'green',
+    height: 57,
+    width: 70,
+    borderRadius: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
 });

@@ -9,7 +9,6 @@ const deleteUserService = async (id) => {
 
     return { data: { email: result.email, salary: result.salary } };
   } catch (err) {
-    console.log(err);
     throw new NotFoundException(
       "Please provide correct id, as there is no user assigned to that id."
     );

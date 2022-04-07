@@ -15,7 +15,6 @@ const authenticateLogin = async (req, res, next) => {
     await jwt.verify(token, config.get("tokenSecret"), async (err, payload) => {
       if (err) throw new UnauthorizedException(CONSTANTS.PROVIDE_CORRECT_TOKEN);
       const { userId } = payload;
-      console.log(userId);
       const user = await User.findById(userId);
       req.user = user;
       next();

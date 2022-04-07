@@ -23,9 +23,7 @@ const db = SQLite.openDatabase(
     console.log(error);
   },
 );
-const Item = ({item, setData}) => {
-  const [daysRem, setDaysRem] = useState(0);
-  const [modalVisible, setModalVisible] = useState(false);
+const Itemt = ({item, navigation, setData, data}) => {
   const convertDateToSpecificFormat = item => {
     const expiryDate = item.expiryDate;
     const splitedDate = expiryDate.split(' ');
@@ -36,38 +34,22 @@ const Item = ({item, setData}) => {
     let timeDifference =
       new Date(item.expiryDate).getTime() - new Date().getTime();
     let differenceInDays = Math.ceil(timeDifference / (1000 * 3600 * 24));
-    diffDays = differenceInDays;
+
     return differenceInDays > 0 ? differenceInDays : 'Expired';
   };
-  const getData = () => {
-    db.transaction(tx => {
-      tx.executeSql('SELECT * FROM Item_Details', [], (tx, results) => {
-        var len = results.rows.length;
-        if (len > 0) {
-          let helperArray = [];
-          for (let i = 0; i < len; i++) {
-            helperArray.push(results.rows.item(i));
-          }
-          setData(helperArray);
-        }
-      });
-    });
-  };
+
   const deleteData = id => {
-    console.log('Inside del data: ', id);
     db.transaction(tx => {
-      console.log('inside transaction start');
       tx.executeSql(
         'DELETE FROM Item_Details WHERE id = ?',
         [id],
         (tx, results) => {
-          var len = results.rows.length;
+          var len = results.rowsAffected;
           if (len > 0) {
-            console.log('ID deleted');
+            getData();
           }
         },
       );
-      console.log('inside transaction end');
     });
   };
   const leftSwipe = () => {
@@ -82,6 +64,20 @@ const Item = ({item, setData}) => {
       </TouchableOpacity>
     );
   };
+  const getData = () => {
+    db.transaction(tx => {
+      tx.executeSql('SELECT * FROM Item_Details', [], (tx, results) => {
+        let len = results.rows.length;
+        if (len > 0) {
+          let helperArray = [];
+          for (let i = 0; i < len; i++) {
+            helperArray.push(results.rows.item(i));
+          }
+          setData(helperArray);
+        }
+      });
+    });
+  };
 
   const rightSwipe = () => {
     return (
@@ -95,9 +91,13 @@ const Item = ({item, setData}) => {
       </TouchableOpacity>
     );
   };
+
   useEffect(() => {
-    getData();
-  });
+    navigation.addListener('focus', () => {
+      getData();
+    });
+  }, []);
+
   return (
     <Swipeable renderLeftActions={leftSwipe} renderRightActions={rightSwipe}>
       <View
@@ -128,7 +128,7 @@ const Item = ({item, setData}) => {
             </View>
             <View style={{flexDirection: 'row'}}>
               <Text style={{fontWeight: 'bold'}}>Days Remaining </Text>
-              <Text style={daysRem <= 10 ? {color: 'red'} : {color: 'black'}}>
+              <Text style={11 <= 10 ? {color: 'red'} : {color: 'black'}}>
                 {calculateDaysRemaining(item)}
               </Text>
             </View>
@@ -188,4 +188,4 @@ const Item = ({item, setData}) => {
   );
 };
 
-export default Item;
+export default Itemt;

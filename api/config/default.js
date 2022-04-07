@@ -9,4 +9,6 @@ module.exports = {
     dbName: process.env.DATABASE_NAME,
   },
   tokenSecret: process.env.TOKEN_SECRET,
+  mailGunApi: process.env.MAILGUN_API_KEY,
+  mailGunDomain: process.env.MAILGUN_DOMAIN,
 };

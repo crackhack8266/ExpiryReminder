@@ -7,18 +7,16 @@ const {
 } = require("../../utilities/exceptions");
 
 const createUserService = async (body) => {
-  const { email, password, salary } = body;
-  if (!email || !password || !salary)
-    throw new UnprocessableEntity("Must Provide Email, Password and Salary");
-  const createdAt = +new Date();
-  const modifiedAt = +new Date();
+  const { username, email, password } = body;
+  if (!username || !email || !password)
+    throw new UnprocessableEntity("Must Provide Email, Password and Username");
   try {
-    const user = new User({ email, password, salary, createdAt, modifiedAt });
+    const user = new User({ userName: username, email, password });
     await user.save();
     const token = jwt.sign({ userId: user._id }, config.get("tokenSecret"));
     return {
       token,
-      data: { id: user._id, email: user.email, salary: user.salary },
+      data: { id: user._id, username: user.userName, email: user.email },
     };
   } catch (e) {
     throw new ConflictException(

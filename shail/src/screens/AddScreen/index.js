@@ -30,6 +30,7 @@ const AddScreen = ({navigation}) => {
   const [isDisplayDate, setShow] = useState(false);
   const [itemName, setItemName] = useState('');
   const [visible, setIsVisible] = useState(true);
+  console.log('navigation in addscreen:', navigation);
 
   const throwError = () => {
     return Alert.alert(
@@ -82,7 +83,7 @@ const AddScreen = ({navigation}) => {
     });
   };
 
-  const insertQuery = (itemName, expiryDate) => {
+  const insertQuery = async (itemName, expiryDate) => {
     console.log('insertQuery Executed:');
 
     if (
@@ -92,7 +93,7 @@ const AddScreen = ({navigation}) => {
       Alert.alert('Warning!', 'Please write your data.');
     } else {
       try {
-        db.transaction(tx => {
+        await db.transaction(tx => {
           // await tx.executeSql(
           //     "INSERT INTO Users (Name, Age) VALUES ('" + name + "'," + age + ")"
           // );
@@ -100,10 +101,14 @@ const AddScreen = ({navigation}) => {
           tx.executeSql(
             'INSERT INTO Item_Details (itemName, expiryDate) VALUES (?,?)',
             [itemName, expiryDate],
+            (tx, results) => {
+              console.log('insert result :', results, tx);
+              console.log('navigated to homescreen');
+              navigation.navigate('HomeScreen');
+              console.log('navigated to homescreen');
+            },
           );
         });
-
-        navigation.navigate('HomeScreen');
       } catch (error) {
         Alert.alert('Error', 'Please try again later.');
       }
@@ -129,7 +134,7 @@ const AddScreen = ({navigation}) => {
                     <TouchableOpacity
                       onPress={() => {
                         setIsVisible(false);
-                        navigation.navigate('HomeScreen');
+                        navigation.navigate('ListScreen');
                       }}>
                       <Svg
                         xmlns="http://www.w3.org/2000/svg"

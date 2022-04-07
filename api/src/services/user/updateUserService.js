@@ -12,10 +12,11 @@ const updateUserService = async (id, body) => {
     e.description = "User not found. Provide correct id";
     throw new NotFoundException(e.description);
   }
+
   if (body.createdAt) {
     delete body.createdAt;
   }
-  Object.assign(result, body, { modifiedAt: +new Date() });
+  Object.assign(result, body);
   try {
     const result1 = await User.exists({ email: body.email, _id: { $ne: id } });
     if (result1) throw new NotFoundException("abcd");
@@ -27,8 +28,12 @@ const updateUserService = async (id, body) => {
     result.save();
     return {
       data: {
+        username: result.userName,
         email: result.email,
-        salary: result.salary,
+        firstname: result.firstName,
+        lastname: result.lastName,
+        phone: result.phone,
+        isverified: result.isVerified,
       },
     };
   } catch (err) {
