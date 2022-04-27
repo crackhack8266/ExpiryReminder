@@ -1,4 +1,5 @@
 import 'react-native-gesture-handler';
+
 import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import SplashScreen from 'screens/SplashScreen';
@@ -10,6 +11,7 @@ import {
   Text,
   Button,
   TextInput,
+  Platform,
 } from 'react-native';
 import {MenuProvider} from 'react-native-popup-menu';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -21,7 +23,7 @@ import ListScreen from './src/screens/ListScreen';
 import AddScreen from './src/screens/AddScreen';
 import Svg, {Path} from 'react-native-svg';
 import styles from './styles';
-
+Icon.loadFont();
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
@@ -33,12 +35,17 @@ const BottomTabNavigator = () => {
         inactiveTintColor: 'grey',
 
         tabBarShowLabel: false,
-        tabBarStyle: {paddingTop: 4, height: 60},
+        tabBarStyle: {
+          paddingTop: 4,
+          height: 60,
+          paddingBottom: Platform.OS == 'ios' ? 10 : null,
+          marginBottom: Platform.OS == 'ios' ? 5 : null,
+        },
         tabBarItemStyle: {
           paddingBottom: 10,
         },
       }}
-      initialRouteName="HomeScreen">
+      initialRouteName="ListScreen">
       <Tab.Screen
         name="HomeScreen"
         component={HomeScreen}

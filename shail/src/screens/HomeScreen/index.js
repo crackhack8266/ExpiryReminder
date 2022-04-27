@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {View, FlatList} from 'react-native';
 import SQLite from 'react-native-sqlite-storage';
 import Itemt from '../../common/components/Item';
-import {useIsFocused} from '@react-navigation/native';
+import PushNotification from 'react-native-push-notification';
 
 const db = SQLite.openDatabase(
   {
@@ -17,6 +17,15 @@ const db = SQLite.openDatabase(
 
 const HomeScreen = ({navigation}) => {
   const [data, setData] = useState([]);
+  const [itemId, setItemId] = useState();
+
+  // const createChannels = () => {
+  //   PushNotification.createChannel({
+  //     channelId: 'test-Channel',
+  //     channelName: 'Test Channel',
+  //   });
+  // };
+
   const getData = async () => {
     try {
       await db.transaction(tx => {
@@ -40,6 +49,7 @@ const HomeScreen = ({navigation}) => {
     navigation.addListener('focus', () => {
       getData();
     });
+    // createChannels();
   }, []);
   return (
     <View style={{marginTop: '10%'}}>
@@ -49,15 +59,8 @@ const HomeScreen = ({navigation}) => {
           height: '80%',
         }}
         keyExtractor={item => item.id}
-        renderItem={({item}) => {
-          return (
-            <Itemt
-              item={item}
-              navigation={navigation}
-              setData={setData}
-              data={data}
-            />
-          );
+        renderItem={({item, index}) => {
+          return <Itemt item={item} setData={setData} index={index} />;
         }}
       />
     </View>

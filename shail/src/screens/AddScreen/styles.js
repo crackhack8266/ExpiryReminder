@@ -41,7 +41,7 @@ export default StyleSheet.create({
   textView: {flex: 1},
   textStyle: {
     marginTop: 15.8,
-    fontFamily: 'ProximaNova-Bold',
+    fontFamily: 'Montserrat-Bold',
     fontSize: 18,
     lineHeight: 22,
     color: '#1c1c1c',

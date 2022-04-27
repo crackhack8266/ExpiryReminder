@@ -46,13 +46,6 @@ const AddScreen = ({navigation}) => {
       throwError();
     }
   };
-  const showMode = currentMode => {
-    setShow(true);
-    setMode(currentMode);
-  };
-  const displayDatepicker = () => {
-    showMode('date');
-  };
 
   const checkMyDate = () => {
     let currDate = new Date().toDateString();
